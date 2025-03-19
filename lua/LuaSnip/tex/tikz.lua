@@ -146,6 +146,35 @@ M = {
 			i(1),
 		})
 	),
+	s(
+		{
+			trig = "pgf2d",
+			dscr = "2d graph template",
+		},
+		fmta(
+			[[
+            \begin{tikzpicture}
+                \begin{axis}[
+                    axis lines=middle, % left
+                    xlabel={$x$}, ylabel={$f(x)$}, % 標示 x 軸和 y 軸
+                    xmin=-pi, xmax=pi, ymin=-1.5, ymax=1.5, 
+                    xtick={-pi, -pi/2, 0, pi/2, pi},
+                    xticklabels={$-\pi$, $-\frac{\pi}{2}$, $0$, $\frac{\pi}{2}$, $\pi$},
+                    % xticklabel style={anchor=south west},
+                    domain=-pi:pi, % x 軸範圍
+                    % title={},
+                    samples=100, 
+                    % legend pos=north east, % 圖例位置
+                    % grid=major, % 加入格線
+                ]
+                    \addplot[red, thick] {sin(deg(x))};
+                    <>   
+                \end{axis}
+            \end{tikzpicture}
+            ]],
+			{ i(1) }
+		)
+	),
 }
 
 return M

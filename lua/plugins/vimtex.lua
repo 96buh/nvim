@@ -35,6 +35,13 @@ return {
 			-- 編譯後的檔案儲存在temp資料夾
 			vim.g.vimtex_compiler_latexmk = {
 				aux_dir = "temp",
+				options = {
+					"-verbose",
+					"-file-line-error",
+					"-synctex=1",
+					"-interaction=nonstopmode",
+					"-shell-escape",
+				},
 			}
 
 			vim.g.vimtex_quickfix_ignore_filters = {

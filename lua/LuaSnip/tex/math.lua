@@ -290,6 +290,16 @@ M = {
 			end,
 		}
 	),
+	s(
+		{ trig = "nabla", dscr = "gradient symbol" },
+		fmta(
+			[[
+                \nabla <>
+            ]],
+			{ i(1) }
+		),
+		{ condition = conditions.in_mathzone }
+	),
 }
 
 vim.list_extend(M, auto_backslash_snippets)
