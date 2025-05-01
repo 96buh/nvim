@@ -107,6 +107,29 @@ M = {
 			}
 		)
 	),
+	-- algorithm
+	s(
+		{
+			trig = "algorithm",
+			dsrc = "algorithm",
+		},
+		fmta(
+			[[
+                \begin{algorithm}
+                    \caption{<>}
+                    \label{alg:<>}
+                    \begin{algorithmic}[1]
+                    <>
+                    \end{algorithmic}
+                \end{algorithm}
+            ]],
+			{
+				i(1),
+				i(2),
+				i(3),
+			}
+		)
+	),
 }
 
 return M

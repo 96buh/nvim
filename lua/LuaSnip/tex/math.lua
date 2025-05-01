@@ -35,6 +35,12 @@ local auto_backslash = {
 	"argmin",
 	"deg",
 	"angle",
+	"to",
+	"iff",
+	"exists",
+	"forall",
+	"neg",
+	"in",
 }
 
 local auto_backslash_snippets = {}
@@ -49,6 +55,7 @@ end
 local symbols = {
 	["ooo"] = { command = "\\infty", symbol = "∞" },
 	["!="] = { command = "\\neq", symbol = "" },
+	["=-"] = { command = "\\equiv", symbol = "≡" },
 	[">="] = { command = "\\geq", symbol = "" },
 	["<="] = { command = "\\leq", symbol = "" },
 	[">>"] = { command = "\\gg", symbol = ">>" },
@@ -57,6 +64,11 @@ local symbols = {
 	["~="] = { command = "\\approx", symbol = "󰾞" },
 	["~-"] = { command = "\\simeq", symbol = "≃" },
 	["..."] = { command = "\\dots", symbol = "..." },
+	["->"] = { command = "\\rightarrow", symbol = "->" },
+	["=>"] = { command = "\\implies", symbol = "=>" },
+	[":="] = { command = "\\coloneqq", symbol = "≔" },
+	["lor"] = { command = "\\vee", symbol = "∨" },
+	["land"] = { command = "\\wedge", symbol = "∧" },
 }
 
 local symbol_snippets = {}
@@ -65,7 +77,7 @@ for trig, data in pairs(symbols) do
 		symbol_snippets,
 		s(
 			{ trig = trig, snippetType = "autosnippet", dscr = data.symbol },
-			{ t(data.command .. " ") },
+			{ t(data.command) },
 			{ condition = conditions.in_mathzone }
 		)
 	)
@@ -134,7 +146,7 @@ M = {
 	),
 	s(
 		{ trig = "td", dscr = "^{}", snippetType = "autosnippet", regTrig = true, wordTrig = false },
-		fmta("^{<>} <>", { i(1), i(0) }),
+		fmta("^{<>}<>", { i(1), i(0) }),
 		{ condition = conditions.in_mathzone }
 	),
 	-- 分數, 根號
@@ -239,7 +251,7 @@ M = {
 		{ trig = "sum", dscr = "sum", snippetType = "autosnippet" },
 		fmta(
 			[[
-                \sum_{<>}^{<>} <>
+                \sum_{<>}^{<>}<>
             ]],
 			{ i(1, "n=1"), i(2, "\\infty"), i(0) }
 		),

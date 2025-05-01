@@ -150,6 +150,9 @@ M = {
 		{
 			trig = "pgf2d",
 			dscr = "2d graph template",
+			show_condition = function()
+				return conditions.in_tikz()
+			end,
 		},
 		fmta(
 			[[
