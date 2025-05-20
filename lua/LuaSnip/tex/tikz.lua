@@ -146,6 +146,41 @@ M = {
 			i(1),
 		})
 	),
+	s( -- chains(畫流程圖或連續節點)
+		{
+			trig = "chain",
+			dscr = "simple chain of nodes",
+			show_condition = function()
+				return conditions.no_math_no_tikz()
+			end,
+		},
+		fmta(
+			[[
+                \begin{tikzpicture}[
+                        node distance=5mm, % 節點距離 
+                        every node/.style={draw}, % 畫邊框, rounded corners增加圓角邊框
+                        every join/.style={}  % myarrow2為箭頭，設定節點自動連線樣式(要加入join)
+                    ]
+                    {   [start chain=1]
+                        \node [on chain] {A};
+                        \node [on chain] {B};
+                        \node [on chain] {C};
+                    }
+                    <>
+                    {   [start chain=2 going below]
+                        \node [on chain] at (0.5,-.5) {0};
+                        \node [on chain] {1};
+                        \node [on chain] {2};
+                    }
+                    % 可以在已經完成的chain重新接續下去
+                    { [continue chain=1]
+                    \node [on chain] {D};
+                    }
+                \end{tikzpicture}
+            ]],
+			{ i(1) }
+		)
+	),
 	s(
 		{
 			trig = "pgf2d",
@@ -156,7 +191,6 @@ M = {
 		},
 		fmta(
 			[[
-            \begin{tikzpicture}
                 \begin{axis}[
                     axis lines=middle, % left
                     xlabel={$x$}, ylabel={$f(x)$}, % 標示 x 軸和 y 軸
@@ -173,7 +207,6 @@ M = {
                     \addplot[red, thick] {sin(deg(x))};
                     <>   
                 \end{axis}
-            \end{tikzpicture}
             ]],
 			{ i(1) }
 		)

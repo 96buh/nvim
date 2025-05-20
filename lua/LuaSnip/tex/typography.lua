@@ -24,6 +24,7 @@ local common = {
 
 	"autoref",
 	"ref",
+	"cref",
 	"eqref",
 	"label",
 }
@@ -35,7 +36,7 @@ for _, name in ipairs(common) do
 		s({
 			trig = name,
 			show_condition = function()
-				return conditions.in_text()
+				return conditions.no_math_no_tikz()
 			end,
 		}, fmta("\\" .. name .. "{<>}", { i(1) }))
 	)

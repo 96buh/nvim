@@ -112,21 +112,46 @@ M = {
 		{
 			trig = "algorithm",
 			dsrc = "algorithm",
+			show_condition = function()
+				return conditions.no_math_no_tikz()
+			end,
 		},
 		fmta(
 			[[
                 \begin{algorithm}
                     \caption{<>}
                     \label{alg:<>}
-                    \begin{algorithmic}[1]
+                    \SetKwFunction{<>}{\textsc{<>}}
                     <>
-                    \end{algorithmic}
                 \end{algorithm}
             ]],
 			{
 				i(1),
 				i(2),
 				i(3),
+				i(4),
+				i(5),
+			}
+		)
+	),
+	-- forest (draw tree)
+	s(
+		{
+			trig = "forest",
+			dsrc = "drawing trees",
+		},
+		fmta(
+			[[
+                \begin{forest}
+                for tree = {draw}
+                [<>
+                   [] 
+                   [] 
+                ]
+                \end{forest}
+            ]],
+			{
+				i(1, "root"),
 			}
 		)
 	),

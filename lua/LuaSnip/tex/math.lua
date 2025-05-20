@@ -284,7 +284,7 @@ M = {
 		),
 		{ condition = conditions.in_mathzone }
 	),
-	-- 數學模式或是tikz環境下字母後面輸入重複數字會變成下標 e.g. a11 -> a_{1}
+	-- 數學模式環境下字母後面輸入重複數字會變成下標 e.g. a11 -> a_{1}
 	s(
 		{ trig = "([%a%)%]%}])(%w)%2(%w*)", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
 		fmta("<>_{<><>} ", {
@@ -298,7 +298,7 @@ M = {
 		}),
 		{
 			condition = function()
-				return conditions.in_mathzone() or conditions.in_tikz()
+				return conditions.in_mathzone()
 			end,
 		}
 	),
