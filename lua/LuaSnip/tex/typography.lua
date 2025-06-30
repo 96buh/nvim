@@ -43,7 +43,6 @@ for _, name in ipairs(common) do
 end
 
 M = {
-	-- Example: italic font implementing visual selection
 	s(
 		{ trig = "tilt", dscr = "Expands 'tilt' into LaTeX's textit{} command." },
 		fmta("\\textit{<>}", {

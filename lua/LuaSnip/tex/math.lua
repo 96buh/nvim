@@ -27,7 +27,6 @@ local auto_backslash = {
 	"star",
 	"perp",
 	"sup",
-	"inf",
 	"det",
 	"max",
 	"min",
@@ -248,6 +247,16 @@ M = {
 		{ condition = conditions.in_mathzone }
 	),
 	s(
+		{ trig = "ilim", dscr = "inline limit", snippetType = "autosnippet" },
+		fmta(
+			[[
+                \lim\limits_{n \to \infty} <>
+            ]],
+			{ i(1) }
+		),
+		{ condition = conditions.in_mathzone }
+	),
+	s(
 		{ trig = "sum", dscr = "sum", snippetType = "autosnippet" },
 		fmta(
 			[[
@@ -286,7 +295,7 @@ M = {
 	),
 	-- 數學模式環境下字母後面輸入重複數字會變成下標 e.g. a11 -> a_{1}
 	s(
-		{ trig = "([%a%)%]%}])(%w)%2(%w*)", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
+		{ trig = "([%a%)%]%}])(%d)%2(%w*)", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
 		fmta("<>_{<><>} ", {
 			f(function(_, snip)
 				return snip.captures[1]
@@ -302,6 +311,7 @@ M = {
 			end,
 		}
 	),
+	--  ∇ 符號
 	s(
 		{ trig = "nabla", dscr = "gradient symbol" },
 		fmta(
@@ -310,6 +320,22 @@ M = {
             ]],
 			{ i(1) }
 		),
+		{ condition = conditions.in_mathzone }
+	),
+	-- mathbb
+	s(
+		{
+			trig = "([A-Z])%1",
+			regTrig = true,
+			wordTrig = false,
+			snippetType = "autosnippet",
+			dscr = "\\mathbb{} (重複大寫字母)",
+		},
+		fmta("\\mathbb{<>}", {
+			f(function(_, snip)
+				return snip.captures[1]
+			end),
+		}),
 		{ condition = conditions.in_mathzone }
 	),
 }
