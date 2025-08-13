@@ -2,7 +2,13 @@ return {
 	{
 		"tpope/vim-fugitive",
 		config = function()
-			vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+			local map = vim.keymap.set
+
+			-- status
+			map("n", "<leader>gs", vim.cmd.Git, { desc = "Git status" })
+
+			-- verticle diff
+			map("n", "<leader>gD", vim.cmd.Gvdiffsplit, { desc = "Git vertical diff" })
 		end,
 	},
 }

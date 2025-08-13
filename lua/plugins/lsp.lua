@@ -2,6 +2,7 @@ return {
 	-- Main LSP Configuration
 	"neovim/nvim-lspconfig",
 	dependencies = {
+		{ "folke/neodev.nvim", opts = {} },
 		{ "williamboman/mason.nvim", opts = {} },
 		"williamboman/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -9,6 +10,22 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
+		require("neodev").setup({})
+
+		if vim.lsp and vim.lsp.config and vim.lsp.enable then
+			vim.lsp.config("lua_ls", {
+				settings = {
+					Lua = {
+						runtime = { version = "LuaJIT" },
+						diagnostics = { globals = { "vim" } },
+						workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
+						completion = { callSnippet = "Replace" },
+						telemetry = { enable = false },
+					},
+				},
+			})
+		end
+
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			callback = function(event)
@@ -152,11 +169,18 @@ return {
 			lua_ls = {
 				settings = {
 					Lua = {
+						diagnostics = {
+							globals = { "vim" },
+						},
+						workspace = {
+							checkThirdParty = false, -- 避免雜訊
+						},
 						completion = {
 							callSnippet = "Replace",
 						},
+						telemetry = { enable = false },
 						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-						diagnostics = { disable = { "missing-fields" }, globals = { "vim" } },
+						-- diagnostics = { disable = { "missing-fields" }, globals = { "vim" } },
 					},
 				},
 			},
@@ -179,14 +203,18 @@ return {
 		require("mason-lspconfig").setup({
 			handlers = {
 				function(server_name)
+					if server_name == "lua_ls" then
+						return
+					end
 					local server = servers[server_name] or {}
-					-- This handles overriding only values explicitly passed
-					-- by the server configuration above. Useful when disabling
-					-- certain features of an LSP (for example, turning off formatting for ts_ls)
 					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 					require("lspconfig")[server_name].setup(server)
 				end,
 			},
 		})
+
+		if vim.lsp and vim.lsp.enable then
+			vim.lsp.enable("lua_ls")
+		end
 	end,
 }

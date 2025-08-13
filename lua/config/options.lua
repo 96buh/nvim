@@ -28,3 +28,5 @@ vim.o.updatetime = 50
 
 vim.opt.fillchars:append({ eob = " " })
 vim.o.termguicolors = true
+
+vim.api.nvim_set_hl(0, "SignColumn", { bg = "NONE" })
