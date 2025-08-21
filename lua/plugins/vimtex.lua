@@ -4,12 +4,11 @@ return {
 		lazy = false, -- we don't want to lazy load VimTeX
 		-- tag = "v2.15", -- uncomment to pin to a specific release
 		config = function()
-			-- 自動縮排(latexindent)
+			-- latexindent
 			vim.g.vimtex_indent_enabled = 1
 			vim.g.vimtex_indent_latexindent = "latexindent"
 			vim.g.vimtex_indent_look_for_local = 1
 
-			-- 2) 打开或新建 .tex 时，设定 indentexpr
 			vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "FileType" }, {
 				pattern = "*.tex",
 				callback = function()

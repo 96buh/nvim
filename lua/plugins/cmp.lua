@@ -31,13 +31,12 @@ return {
 				["<C-k>"] = cmp.mapping.select_prev_item(),
 				["<C-d>"] = cmp.mapping.scroll_docs(-4),
 				["<C-u>"] = cmp.mapping.scroll_docs(4),
-				["<C-Space>"] = cmp.mapping.complete({}),
 				["<C-e>"] = cmp.mapping.abort(),
 				["<CR>"] = cmp.mapping.confirm({
 					behavior = cmp.ConfirmBehavior.Replace,
 					select = true,
 				}),
-				["<C-i>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+				["<C-l>"] = cmp.mapping.complete(),
 
 				["<Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
