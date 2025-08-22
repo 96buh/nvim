@@ -1,7 +1,6 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		{ "folke/neodev.nvim", opts = {} },
 		{ "williamboman/mason.nvim", opts = {} },
 		"williamboman/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -9,8 +8,6 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
-		require("neodev").setup({})
-
 		-- nvim-cmp capabilities → broadcast to all servers
 		local capabilities = vim.tbl_deep_extend(
 			"force",
@@ -80,9 +77,6 @@ return {
 			end,
 		})
 
-		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#282828", fg = "#ebdbb2" }) -- 深背景、亮文字
-		vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#282828", fg = "#a89984" }) -- 邊框淡灰棕
-
 		vim.diagnostic.config({
 			-- virtual_text = {
 			-- 	prefix = "⚠️",
@@ -105,7 +99,7 @@ return {
 		------------------------------------------------------------------
 		-- LSP CONFIGS                                                  --
 		------------------------------------------------------------------
-		local util = require("lspconfig.util")
+		-- local util = require("lspconfig.util")
 
 		-- Lua
 		vim.lsp.config("lua_ls", {

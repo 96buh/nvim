@@ -4,6 +4,7 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.mouse = "a"
+vim.o.winborder = "rounded"
 
 vim.o.clipboard = "unnamedplus"
 
@@ -11,9 +12,11 @@ vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
+vim.o.smartindent = true
 
 vim.o.wrap = false
 
+vim.o.ignorecase = true
 vim.o.swapfile = false
 vim.o.backup = false
 vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
@@ -28,5 +31,9 @@ vim.o.updatetime = 50
 
 vim.opt.fillchars:append({ eob = " " })
 vim.o.termguicolors = true
+vim.o.showmode = false
+vim.o.cmdheight = 0
 
 vim.api.nvim_set_hl(0, "SignColumn", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#282828", fg = "#ebdbb2" })
+vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#282828", fg = "#a89984" })
