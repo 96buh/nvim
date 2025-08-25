@@ -11,12 +11,12 @@ return {
 				javascriptreact = { "eslint_d" },
 				typescriptreact = { "eslint_d" },
 				-- python = { "pylint" },
-				markdown = { "markdownlint" },
+				-- markdown = { "markdownlint" },
 			}
 
-			lint.linters.markdownlint = {
-				args = { "--disable", "MD013", "--" },
-			}
+			-- lint.linters.markdownlint = {
+			-- 	args = { "--disable", "MD013", "--stdin" },
+			-- }
 
 			local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 			vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {

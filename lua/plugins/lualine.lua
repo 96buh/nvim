@@ -19,13 +19,32 @@ return {
 				end
 			end
 
+			local function macro_recording()
+				local reg = vim.fn.reg_recording()
+				if reg == "" then
+					return ""
+				else
+					return " REC @" .. reg
+				end
+			end
+
 			require("lualine").setup({
 				icons_enabled = true,
 				theme = "gruvbox",
 				sections = {
 					-- lualine_x = { "encoding", { "fileformat", symbols = { unix = os_icon() } }, "filetype" },
 					lualine_x = { "filetype" },
+					lualine_b = {
+						"filename",
+						macro_recording,
+					},
 				},
+			})
+
+			vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+				callback = function()
+					require("lualine").refresh()
+				end,
 			})
 		end,
 	},
