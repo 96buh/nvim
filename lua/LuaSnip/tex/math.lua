@@ -40,6 +40,7 @@ local auto_backslash = {
 	"forall",
 	"neg",
 	"in",
+	"rank",
 }
 
 local auto_backslash_snippets = {}

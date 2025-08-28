@@ -24,7 +24,7 @@ return {
 							["<C-p>"] = actions.cycle_history_prev,
 						},
 						n = {
-							-- 在 normal 模式下也可以自定義按鍵，例如退出 Telescope
+							-- normal mode quit
 							["q"] = actions.close,
 						},
 					},

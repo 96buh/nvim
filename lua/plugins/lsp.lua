@@ -78,17 +78,12 @@ return {
 		})
 
 		vim.diagnostic.config({
-			-- virtual_text = {
-			-- 	prefix = "⚠️",
-			-- 	spacing = 4,
-			-- },
-			signs = true, -- 顯示E/W/H
+			signs = true,
 			underline = true,
 			float = {
 				border = "rounded",
 				focusable = false,
 				style = "minimal",
-				source = "always",
 				header = "",
 				prefix = "",
 			},
@@ -99,7 +94,6 @@ return {
 		------------------------------------------------------------------
 		-- LSP CONFIGS                                                  --
 		------------------------------------------------------------------
-		-- local util = require("lspconfig.util")
 
 		-- Lua
 		vim.lsp.config("lua_ls", {
@@ -192,6 +186,16 @@ return {
 			},
 		})
 
+		-- typst
+		vim.lsp.config["tinymist"] = {
+			cmd = { "tinymist" },
+			filetypes = { "typst" },
+			settings = {
+				formatterMode = "typstyle",
+				formatterIndentSize = 4,
+			},
+		}
+
 		-- mason
 		require("mason-lspconfig").setup({
 			ensure_installed = {
@@ -202,6 +206,7 @@ return {
 				"cssls",
 				"tailwindcss",
 				"vtsls",
+				"tinymist",
 			},
 			automatic_installation = true,
 		})
@@ -228,5 +233,6 @@ return {
 		vim.lsp.enable("html")
 		vim.lsp.enable("cssls")
 		vim.lsp.enable("tailwindcss")
+		vim.lsp.enable("tinymist")
 	end,
 }
