@@ -1,36 +1,29 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
-vim.o.number = true
-vim.o.relativenumber = true
-vim.o.mouse = "a"
-vim.o.winborder = "rounded"
+local opt = vim.o
 
-vim.o.clipboard = "unnamedplus"
+opt.number = true
+opt.relativenumber = true
+opt.mouse = "a"
 
-vim.o.tabstop = 4
-vim.o.softtabstop = 4
-vim.o.shiftwidth = 4
-vim.o.expandtab = true
-vim.o.smartindent = true
+opt.clipboard = "unnamedplus"
 
-vim.o.wrap = false
+opt.tabstop = 4
+opt.softtabstop = 4
+opt.shiftwidth = 4
+opt.expandtab = true
+opt.smartindent = true
 
-vim.o.ignorecase = true
-vim.o.swapfile = false
-vim.o.backup = false
-vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.o.undofile = true
+opt.wrap = false
 
-vim.o.hlsearch = false
-vim.o.incsearch = true
+opt.ignorecase = true
+opt.swapfile = false
+opt.backup = false
+opt.undofile = true
 
-vim.o.scrolloff = 8
+opt.hlsearch = false
+opt.incsearch = true
 
-vim.o.updatetime = 50
-
-vim.opt.fillchars:append({ eob = " " })
-vim.o.termguicolors = true
-vim.o.showmode = false
-vim.o.cmdheight = 0
-
+opt.scrolloff = 8
+opt.updatetime = 50
+opt.cmdheight = 0

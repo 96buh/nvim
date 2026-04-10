@@ -8,7 +8,35 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
-		-- nvim-cmp capabilities → broadcast to all servers
+		local lsp_servers = {
+			"lua_ls",
+			"clangd",
+			"pyright",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"vtsls",
+			"tinymist",
+			"rust_analyzer",
+		}
+		local mason_tools = {
+			"prettier",
+			"stylua",
+			"pylint",
+			"eslint_d",
+		}
+		local enabled_servers = {
+			"lua_ls",
+			"clangd",
+			"pyright",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"vtsls",
+			"tinymist",
+			"rust_analyzer",
+		}
+
 		local capabilities = vim.tbl_deep_extend(
 			"force",
 			vim.lsp.protocol.make_client_capabilities(),
@@ -43,59 +71,35 @@ return {
 				end, "Show line diagnostics")
 
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
-				if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-					local hl = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+				if client and client:supports_method("textDocument/documentHighlight", event.buf) then
+					local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+
 					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 						buffer = event.buf,
-						group = hl,
+						group = highlight_augroup,
 						callback = vim.lsp.buf.document_highlight,
 					})
+
 					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
 						buffer = event.buf,
-						group = hl,
+						group = highlight_augroup,
 						callback = vim.lsp.buf.clear_references,
 					})
+
 					vim.api.nvim_create_autocmd("LspDetach", {
 						group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
-						callback = function(ev)
+						callback = function(detach_event)
 							vim.lsp.buf.clear_references()
-							vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = ev.buf })
+							vim.api.nvim_clear_autocmds({
+								group = "kickstart-lsp-highlight",
+								buffer = detach_event.buf,
+							})
 						end,
 					})
-				end
-
-				if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-					vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
-
-					map("<leader>th", function()
-						vim.lsp.inlay_hint.enable(
-							not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }),
-							{ bufnr = event.buf }
-						)
-					end, "[T]oggle Inlay [H]ints")
 				end
 			end,
 		})
 
-		vim.diagnostic.config({
-			signs = true,
-			underline = true,
-			float = {
-				border = "rounded",
-				focusable = false,
-				style = "minimal",
-				header = "",
-				prefix = "",
-			},
-			severity_sort = true,
-			update_in_insert = false,
-		})
-
-		------------------------------------------------------------------
-		-- LSP CONFIGS                                                  --
-		------------------------------------------------------------------
-
-		-- Lua
 		vim.lsp.config("lua_ls", {
 			capabilities = capabilities,
 			settings = {
@@ -109,14 +113,12 @@ return {
 			},
 		})
 
-		-- C/C++
 		vim.lsp.config("clangd", {
 			capabilities = capabilities,
 			cmd = { "clangd", "--background-index", "--clang-tidy" },
 			filetypes = { "c", "cpp", "objc", "objcpp" },
 		})
 
-		-- Python
 		vim.lsp.config("pyright", {
 			capabilities = capabilities,
 			settings = {
@@ -130,11 +132,9 @@ return {
 			},
 		})
 
-		-- HTML / CSS
 		vim.lsp.config("html", { capabilities = capabilities })
 		vim.lsp.config("cssls", { capabilities = capabilities })
 
-		-- TailwindCSS
 		vim.lsp.config("tailwindcss", {
 			capabilities = capabilities,
 			filetypes = {
@@ -147,7 +147,10 @@ return {
 			},
 		})
 
-		-- typescript
+		vim.lsp.config("rust_analyzer", {
+			capabilities = capabilities,
+		})
+
 		vim.lsp.config("vtsls", {
 			capabilities = capabilities,
 			settings = {
@@ -168,7 +171,7 @@ return {
 						semicolons = "remove", -- "insert" | "remove" | "ignore"
 					},
 					preferences = {
-						importModuleSpecifier = "non-relative", -- 選擇 import style
+						importModuleSpecifier = "non-relative",
 						includeCompletionsForModuleExports = true,
 						includeCompletionsWithInsertText = true,
 					},
@@ -186,50 +189,28 @@ return {
 			},
 		})
 
-		-- typst
-		vim.lsp.config["tinymist"] = {
+		vim.lsp.config("tinymist", {
 			cmd = { "tinymist" },
 			filetypes = { "typst" },
 			settings = {
 				formatterMode = "typstyle",
 				formatterIndentSize = 4,
 			},
-		}
+		})
 
-		-- mason
 		require("mason-lspconfig").setup({
-			ensure_installed = {
-				"lua_ls",
-				"clangd",
-				"pyright",
-				"html",
-				"cssls",
-				"tailwindcss",
-				"vtsls",
-				"tinymist",
-			},
+			ensure_installed = lsp_servers,
 			automatic_installation = true,
 		})
 
-		-- formatter/linter
 		require("mason-tool-installer").setup({
-			ensure_installed = {
-				-- formatting
-				"prettier",
-				"stylua",
-				"pylint",
-				"eslint_d",
-			},
+			ensure_installed = mason_tools,
 			auto_update = false,
 			run_on_start = true,
 		})
 
-		vim.lsp.enable("lua_ls")
-		vim.lsp.enable("clangd")
-		vim.lsp.enable("pyright")
-		vim.lsp.enable("html")
-		vim.lsp.enable("cssls")
-		vim.lsp.enable("tailwindcss")
-		vim.lsp.enable("tinymist")
+		for _, server in ipairs(enabled_servers) do
+			vim.lsp.enable(server)
+		end
 	end,
 }

@@ -53,7 +53,7 @@ for _, name in ipairs(auto_backslash) do
 	)
 end
 
--- 符號(他們的名字不好記)
+-- 數學符號(他們的名字不好記)
 local symbols = {
 	["ooo"] = { command = "\\infty", symbol = "∞" },
 	["!="] = { command = "\\neq", symbol = "" },

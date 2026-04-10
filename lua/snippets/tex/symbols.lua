@@ -28,7 +28,6 @@ local greek_alphabet = {
 	["lambda"] = { command = "\\lambda", symbol = "λ" },
 	["mu"] = { command = "\\mu", symbol = "μ" },
 	["nu"] = { command = "\\mu", symbol = "ν" },
-	-- ["xi"] = { command = "\\xi", symbol = "ξ" },
 	["omicron"] = { command = "\\omicron", symbol = "ο" },
 	["pi"] = { command = "\\pi", symbol = "π" },
 	["rho"] = { command = "\\rho", symbol = "ρ" },
@@ -53,7 +52,6 @@ local greek_alphabet = {
 	["Lambda"] = { command = "\\Lambda", symbol = "Λ" },
 	["Mu"] = { command = "\\Mu", symbol = "Μ" },
 	["Nu"] = { command = "\\Mu", symbol = "N" },
-	-- ["Xi"] = { command = "\\Xi", symbol = "Ξ" },
 	["Omicron"] = { command = "\\Omicron", symbol = "Ο" },
 	["Pi"] = { command = "\\Pi", symbol = "Π" },
 	["Rho"] = { command = "\\Rho", symbol = "P" },
@@ -72,7 +70,7 @@ for trig, data in pairs(greek_alphabet) do
 		greek_snippets,
 		s(
 			{ trig = trig, snippetType = "autosnippet", dscr = data.symbol },
-			{ t(data.command .. " ") },
+			{ t(data.command) },
 			{ condition = conditions.in_mathzone }
 		)
 	)
