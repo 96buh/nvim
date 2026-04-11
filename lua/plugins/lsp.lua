@@ -1,49 +1,12 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		{ "williamboman/mason.nvim", opts = {} },
-		"williamboman/mason-lspconfig.nvim",
+		{ "mason-org/mason.nvim", opts = {} },
+		"mason-org/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		{ "j-hui/fidget.nvim", opts = {} },
-		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
-		local lsp_servers = {
-			"lua_ls",
-			"clangd",
-			"pyright",
-			"html",
-			"cssls",
-			"tailwindcss",
-			"vtsls",
-			"tinymist",
-			"rust_analyzer",
-		}
-		local mason_tools = {
-			"prettier",
-			"stylua",
-			"pylint",
-			"eslint_d",
-		}
-		local enabled_servers = {
-			"lua_ls",
-			"clangd",
-			"pyright",
-			"html",
-			"cssls",
-			"tailwindcss",
-			"vtsls",
-			"tinymist",
-			"rust_analyzer",
-		}
-
-		local capabilities = vim.tbl_deep_extend(
-			"force",
-			vim.lsp.protocol.make_client_capabilities(),
-			require("cmp_nvim_lsp").default_capabilities()
-		)
-
-		-- Keymaps & highlights on LSP attach
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			callback = function(event)
@@ -52,23 +15,9 @@ return {
 					vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 				end
 
-				map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-				map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-				map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-				map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
-				map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-				map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
-				map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
-				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-				map("K", vim.lsp.buf.hover, "Hover")
-				map("<leader>e", function()
-					vim.diagnostic.open_float(0, {
-						scope = "line",
-						border = "rounded",
-						focus = false,
-					})
-				end, "Show line diagnostics")
+				map("grn", vim.lsp.buf.rename, "[R]e[n]ame the variable under your cursor")
+				map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
+				map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
 				if client and client:supports_method("textDocument/documentHighlight", event.buf) then
@@ -100,117 +49,57 @@ return {
 			end,
 		})
 
-		vim.lsp.config("lua_ls", {
-			capabilities = capabilities,
-			settings = {
-				Lua = {
-					runtime = { version = "LuaJIT" },
-					diagnostics = { globals = { "vim" } },
-					workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
-					completion = { callSnippet = "Replace" },
-					telemetry = { enable = false },
-				},
-			},
-		})
+		local servers = {
+			clangd = {},
+			pyright = {},
+			rust_analyzer = {},
+			stylua = {}, -- Used to format Lua code
+			ts_ls = {}, -- or use this plugin: https://github.com/pmizio/typescript-tools.nvim
 
-		vim.lsp.config("clangd", {
-			capabilities = capabilities,
-			cmd = { "clangd", "--background-index", "--clang-tidy" },
-			filetypes = { "c", "cpp", "objc", "objcpp" },
-		})
+			-- Special Lua Config, as recommended by neovim help docs
+			lua_ls = {
+				on_init = function(client)
+					if client.workspace_folders then
+						local path = client.workspace_folders[1].name
+						if
+							path ~= vim.fn.stdpath("config")
+							and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+						then
+							return
+						end
+					end
 
-		vim.lsp.config("pyright", {
-			capabilities = capabilities,
-			settings = {
-				python = {
-					analysis = {
-						diagnosticSeverityOverrides = {
-							reportUnusedExpression = "none",
+					client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+						runtime = {
+							version = "LuaJIT",
+							path = { "lua/?.lua", "lua/?/init.lua" },
 						},
-					},
+						workspace = {
+							checkThirdParty = false,
+							-- NOTE: this is a lot slower and will cause issues when working on your own configuration.
+							--  See https://github.com/neovim/nvim-lspconfig/issues/3189
+							library = vim.tbl_extend("force", vim.api.nvim_get_runtime_file("", true), {
+								"${3rd}/luv/library",
+								"${3rd}/busted/library",
+							}),
+						},
+					})
+				end,
+				settings = {
+					Lua = {},
 				},
 			},
+		}
+		local ensure_installed = vim.tbl_keys(servers or {})
+		vim.list_extend(ensure_installed, {
+			-- You can add other tools here that you want Mason to install
 		})
 
-		vim.lsp.config("html", { capabilities = capabilities })
-		vim.lsp.config("cssls", { capabilities = capabilities })
+		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-		vim.lsp.config("tailwindcss", {
-			capabilities = capabilities,
-			filetypes = {
-				"html",
-				"css",
-				"javascript",
-				"javascriptreact",
-				"typescript",
-				"typescriptreact",
-			},
-		})
-
-		vim.lsp.config("rust_analyzer", {
-			capabilities = capabilities,
-		})
-
-		vim.lsp.config("vtsls", {
-			capabilities = capabilities,
-			settings = {
-				vtsls = {
-					autoUseWorkspaceTsdk = true,
-					maxTsServerMemory = 4096,
-				},
-				typescript = {
-					inlayHints = {
-						enumMemberValues = { enabled = true },
-						functionLikeReturnTypes = { enabled = true },
-						parameterNames = { enabled = "all" }, -- "none" | "literals" | "all"
-						parameterTypes = { enabled = true },
-						propertyDeclarationTypes = { enabled = true },
-						variableTypes = { enabled = true },
-					},
-					format = {
-						semicolons = "remove", -- "insert" | "remove" | "ignore"
-					},
-					preferences = {
-						importModuleSpecifier = "non-relative",
-						includeCompletionsForModuleExports = true,
-						includeCompletionsWithInsertText = true,
-					},
-				},
-				javascript = {
-					inlayHints = {
-						enumMemberValues = { enabled = true },
-						functionLikeReturnTypes = { enabled = true },
-						parameterNames = { enabled = "all" },
-						parameterTypes = { enabled = true },
-						propertyDeclarationTypes = { enabled = true },
-						variableTypes = { enabled = true },
-					},
-				},
-			},
-		})
-
-		vim.lsp.config("tinymist", {
-			cmd = { "tinymist" },
-			filetypes = { "typst" },
-			settings = {
-				formatterMode = "typstyle",
-				formatterIndentSize = 4,
-			},
-		})
-
-		require("mason-lspconfig").setup({
-			ensure_installed = lsp_servers,
-			automatic_installation = true,
-		})
-
-		require("mason-tool-installer").setup({
-			ensure_installed = mason_tools,
-			auto_update = false,
-			run_on_start = true,
-		})
-
-		for _, server in ipairs(enabled_servers) do
-			vim.lsp.enable(server)
+		for name, server in pairs(servers) do
+			vim.lsp.config(name, server)
+			vim.lsp.enable(name)
 		end
 	end,
 }

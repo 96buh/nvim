@@ -41,8 +41,8 @@ local auto_backslash = {
 	"neg",
 	"in",
 	"rank",
-    "times",
-    "div"
+	"times",
+	"div",
 }
 
 local auto_backslash_snippets = {}
@@ -179,17 +179,10 @@ M = {
 		}),
 		{ condition = conditions.in_mathzone }
 	),
+	s({ trig = "sqrt", dscr = "square root" }, fmta("\\sqrt{<>} ", { i(1) }), { condition = conditions.in_mathzone }),
 	s(
-		{ trig = "sqrt", dscr = "square root"},
-		fmta("\\sqrt{<>} ", { i(1) }),
-		{ condition = conditions.in_mathzone }
-	),
-	s(
-		{ trig = "sqrtn", dscr = "N-th root"},
-		fmta(
-            "\\sqrt[<>]{<>} ",
-            { i(1, "n"), i(2) }
-        ),
+		{ trig = "sqrtn", dscr = "N-th root" },
+		fmta("\\sqrt[<>]{<>} ", { i(1, "n"), i(2) }),
 		{ condition = conditions.in_mathzone }
 	),
 	-- 微分, 積分, limit, sum
