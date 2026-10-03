@@ -12,10 +12,17 @@ return {
 		{ "<localleader>v", "<Plug>(vimtex-view)", ft = "tex", desc = "VimTeX View" },
 	},
 	init = function()
-		local vimtex_fmt_group = vim.api.nvim_create_augroup("VimtexFormatOnSave", { clear = true })
+		-- local vimtex_fmt_group = vim.api.nvim_create_augroup("VimtexFormatOnSave", { clear = true })
+		vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+			pattern = "tex",
+			callback = function()
+				vim.opt_local.spell = true
+				vim.opt_local.spelllang = "en_us"
+			end,
+		})
 
-		vim.g.vimtex_format_enabled = 1
-		vim.g.vimtex_indent_enabled = 1
+		vim.g.vimtex_format_enabled = 0
+		vim.g.vimtex_indent_enabled = 0
 		vim.g.vimtex_view_method = "skim"
 		vim.g.vimtex_complete_enable = 1
 		vim.g.vimtex_quickfix_open_on_warning = 0
@@ -52,14 +59,14 @@ return {
 			},
 		}
 
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = vimtex_fmt_group,
-			pattern = "*.tex",
-			callback = function()
-				local save_cursor = vim.fn.getpos(".")
-				vim.cmd([[:normal! gg=G]])
-				vim.fn.setpos(".", save_cursor)
-			end,
-		})
+		-- vim.api.nvim_create_autocmd("BufWritePre", {
+		-- 	group = vimtex_fmt_group,
+		-- 	pattern = "*.tex",
+		-- 	callback = function()
+		-- 		local save_cursor = vim.fn.getpos(".")
+		-- 		vim.cmd([[:normal! gg=G]])
+		-- 		vim.fn.setpos(".", save_cursor)
+		-- 	end,
+		-- })
 	end,
 }

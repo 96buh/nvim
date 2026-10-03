@@ -7,6 +7,9 @@ return {
 		{ "j-hui/fidget.nvim", opts = {} },
 	},
 	config = function()
+		local clangd = require("config.clangd")
+		clangd.setup_info_command()
+
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			callback = function(event)
@@ -15,6 +18,7 @@ return {
 					vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 				end
 
+				map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 				map("grn", vim.lsp.buf.rename, "[R]e[n]ame the variable under your cursor")
 				map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
 				map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
@@ -46,14 +50,28 @@ return {
 						end,
 					})
 				end
+
+				if client and client.name == "ruff" then
+					client.server_capabilities.hoverProvider = false
+				end
 			end,
 		})
 
 		local servers = {
-			clangd = {},
-			pyright = {},
+			clangd = clangd.config(),
+			pyright = {
+				settings = {
+					python = {
+						analysis = {
+							diagnosticSeverityOverrides = {
+								reportPrivateImportUsage = "none",
+							},
+						},
+					},
+				},
+			},
+			ruff = {},
 			rust_analyzer = {},
-			stylua = {}, -- Used to format Lua code
 			ts_ls = {}, -- or use this plugin: https://github.com/pmizio/typescript-tools.nvim
 
 			-- Special Lua Config, as recommended by neovim help docs
@@ -93,6 +111,8 @@ return {
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, {
 			-- You can add other tools here that you want Mason to install
+			"stylua",
+			"prettierd",
 		})
 
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })

@@ -9,6 +9,10 @@ return {
 		require("oil").setup({
 			view_options = {
 				show_hidden = true,
+				sort = {
+					{ "type", "asc" },
+					{ "name", "asc" },
+				},
 			},
 		})
 	end,

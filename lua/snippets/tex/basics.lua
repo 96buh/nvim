@@ -69,7 +69,7 @@ M = {
 			d(1, get_visual),
 		})
 	),
-    -- begin
+	-- begin
 	s(
 		{ trig = "beg", dsrc = "create environment", snippetType = "autosnippet" },
 		fmta(
@@ -122,6 +122,23 @@ M = {
 				i(2),
 				i(3),
 				i(4),
+			}
+		)
+	),
+	-- url
+	s(
+		{
+			trig = "url",
+			dsrc = "Uses a hidden link to a web address and show a word",
+		},
+		fmta(
+			[[
+            \href{<>}{<>}<>
+            ]],
+			{
+				i(1),
+				i(2),
+				i(3),
 			}
 		)
 	),

@@ -19,14 +19,15 @@ return {
 		},
 		{
 			"saghen/blink.compat",
-			version = "*",
+			version = "2.*",
 			lazy = true,
 			opts = {},
 		},
 		"micangl/cmp-vimtex",
+		"krissen/blink-cmp-bibtex",
 	},
 	opts = {
-		keymaps = { preset = "default" },
+		keymap = { preset = "default" },
 		appearance = { nerd_font_variant = "mono" },
 		completion = {
 			menu = {
@@ -39,13 +40,20 @@ return {
 		},
 		snippets = { preset = "luasnip" },
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer", "vimtex" },
+			default = { "vimtex", "lsp", "path", "snippets", "bibtex" },
 			providers = {
 				vimtex = {
 					name = "vimtex",
 					min_keyword_length = 2,
 					module = "blink.compat.source",
 					score_offset = 80,
+				},
+				bibtex = {
+					name = "BibTeX",
+					module = "blink-cmp-bibtex",
+					opts = {
+						files = { "references.bib" },
+					},
 				},
 			},
 		},

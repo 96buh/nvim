@@ -12,16 +12,29 @@ return {
 				return nil
 			else
 				return {
-					timeout_ms = 500,
+					timeout_ms = 2000,
 					lsp_format = "fallback",
 				}
 			end
 		end,
+		formatters = {
+			latexindent = {
+				prepend_args = { "-l", "-m" },
+			},
+		},
 		formatters_by_ft = {
 			lua = { "stylua" },
-			python = { "isort", "black" },
-			javascript = { "prettierd", "prettier", stop_after_first = true },
+			python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
 			rust = { "rustfmt", lsp_format = "fallback" },
+			javascript = { "prettierd", "prettier", stop_after_first = true },
+			json = { "prettierd", "prettier", stop_after_first = true },
+			jsonc = { "prettierd", "prettier", stop_after_first = true },
+			markdown = { "prettier" },
+			yaml = { "prettier" },
+			yml = { "prettier" },
+			html = { "prettier" },
+			liquid = { "prettier" },
+			tex = { "latexindent" },
 		},
 	},
 }
