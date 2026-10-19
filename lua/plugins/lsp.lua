@@ -24,6 +24,10 @@ return {
 				map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				if client and client.name == "pyrefly" and client:supports_method("textDocument/inlayHint", event.buf) then
+					vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
+				end
+
 				if client and client:supports_method("textDocument/documentHighlight", event.buf) then
 					local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
 
@@ -59,12 +63,13 @@ return {
 
 		local servers = {
 			clangd = clangd.config(),
-			pyright = {
+			pyrefly = {
 				settings = {
 					python = {
 						analysis = {
-							diagnosticSeverityOverrides = {
-								reportPrivateImportUsage = "none",
+							inlayHints = {
+								variableTypes = true,
+								functionReturnTypes = true,
 							},
 						},
 					},
