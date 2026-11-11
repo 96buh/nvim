@@ -63,6 +63,7 @@ return {
 
 		local servers = {
 			clangd = clangd.config(),
+			nixd = {}, -- Installed through Nix; formatting is handled by Conform.
 			pyrefly = {
 				settings = {
 					python = {
@@ -113,10 +114,15 @@ return {
 				},
 			},
 		}
-		local ensure_installed = vim.tbl_keys(servers or {})
+		local ensure_installed = vim.tbl_filter(function(name)
+			return name ~= "nixd" -- Managed by Nix instead of Mason.
+		end, vim.tbl_keys(servers))
 		vim.list_extend(ensure_installed, {
 			-- You can add other tools here that you want Mason to install
+			"alejandra",
+			"clang-format",
 			"stylua",
+			"prettier",
 			"prettierd",
 		})
 

@@ -25,4 +25,4 @@ opt.ignorecase = true
 opt.smartindent = true
 
 opt.scrolloff = 8
-opt.updatetime = 50
+opt.updatetime = 250

@@ -13,5 +13,12 @@ map("x", "<leader>p", '"_dP')
 map("n", "<leader>sp", "1z=")
 map("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 
-vim.cmd("packadd nvim.undotree")
-map("n", "<leader>u", require("undotree").open)
+map("n", "<leader>u", function()
+	pcall(vim.cmd.packadd, "nvim.undotree")
+	local ok, undotree = pcall(require, "undotree")
+	if not ok then
+		vim.notify("Undotree is not available. Install or enable nvim.undotree first.", vim.log.levels.WARN)
+		return
+	end
+	undotree.open()
+end, { desc = "Open undo tree" })

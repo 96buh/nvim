@@ -19,6 +19,12 @@ return {
 		local telescope = require("telescope")
 
 		telescope.setup({
+			pickers = {
+				find_files = {
+					hidden = true,
+					find_command = { "rg", "--files", "--glob", "!.git" },
+				},
+			},
 			extensions = {
 				fzf = {
 					fuzzy = true,

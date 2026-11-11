@@ -7,6 +7,10 @@ return {
 	},
 	config = function()
 		require("oil").setup({
+			win_options = {
+				signcolumn = "yes:2",
+				winhighlight = "SignColumn:Normal",
+			},
 			view_options = {
 				show_hidden = true,
 				sort = {

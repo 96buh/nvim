@@ -48,6 +48,8 @@ return {
 			{ name = "multiply", cmdre = "times", mathmode = 1, concealchar = "" },
 		}
 		vim.g.vimtex_compiler_latexmk = {
+			-- Keep PDF, SyncTeX, and auxiliary files together under the project root.
+			out_dir = "temp",
 			aux_dir = "temp",
 			options = {
 				"-verbose",
